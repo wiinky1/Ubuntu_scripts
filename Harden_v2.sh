@@ -88,6 +88,7 @@ echo "--> Cleaning up..."
 # wireless cracking tool that may be present.
 echo "Removing hacking tools..."
 sudo apt-get remove --purge -y ophcrack aircrack-ng
+sudo apt purge wireshark 
 
 # Remove common pre-installed games and unnecessary graphical tools
 echo "Removing pre-installed games..."
