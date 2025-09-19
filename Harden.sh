@@ -82,6 +82,8 @@ ufw enable
 
 # --- Final Touches ---
 echo "--> Cleaning up..."
+sudo apt update
+sudo apt upgrade
+sudo apt autoremove
 
 echo "--- Script execution complete. ---"
-echo "Remember to manually check for other vulnerabilities and to verify all changes."
