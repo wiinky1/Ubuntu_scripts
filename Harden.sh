@@ -19,9 +19,6 @@ fi
 echo "--- Starting CyberPatriot Hardening Script ---"
 
 # --- User and Group Management ---
-# This is usually the first task.
-# Be careful here! The names of bad users change every round.
-
 echo "--> Hardening user accounts..."
 
 # Bad users to remove. Add more as you find them.
@@ -37,7 +34,9 @@ for group in sudo; do
     if getent group "$group" &>/dev/null; then
         echo "Checking '$group' group..."
         for user in $(getent group "$group" | cut -d: -f4 | sed 's/,/ /g'); do
-            if [[ "$user" != "team" && "$user" != "root" ]]; then
+            # The following line is the modification.
+            # It checks that the user is NOT 'team', 'root', or the current user.
+            if [[ "$user" != "team" && "$user" != "root" && "$user" != "$(whoami)" ]]; then
                 echo "Removing user '$user' from group '$group'."
                 gpasswd -d "$user" "$group"
             fi
@@ -46,28 +45,18 @@ for group in sudo; do
 done
 
 # --- File Permissions and System Hardening ---
-# This section fixes common misconfigurations.
-
 echo "--> Fixing file permissions..."
-
-# Find and fix world-writable files and directories.
-# This command is a powerful one-liner.
 echo "Searching for world-writable files and directories..."
 find / -type f -perm -o+w -exec chmod o-w {} \; 2>/dev/null
 find / -type d -perm -o+w -exec chmod o-w {} \; 2>/dev/null
 
-# Secure key system files
 echo "Securing critical system files..."
 chmod 640 /etc/passwd /etc/group /etc/shadow
 chmod 600 /etc/sudoers /etc/gshadow
 
 # --- Service and Network Hardening ---
-# Disable insecure services and configure the firewall.
-
 echo "--> Hardening network and services..."
 
-# List of common insecure services to disable.
-# ALWAYS check to make sure these aren't needed for scoring!
 services=(
     telnet.socket
     ftp.service
@@ -92,15 +81,7 @@ ufw default allow outgoing
 ufw enable
 
 # --- Final Touches ---
-# Clean up and provide a summary.
-
 echo "--> Cleaning up..."
-
-# Remove any common malware or unwanted files.
-# The filename will change based on the round!
-# if [ -f "/home/user/malware.sh" ]; then
-#    rm /home/user/malware.sh
-# fi
 
 echo "--- Script execution complete. ---"
 echo "Remember to manually check for other vulnerabilities and to verify all changes."
