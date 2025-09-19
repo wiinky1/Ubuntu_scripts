@@ -34,9 +34,8 @@ for group in sudo; do
     if getent group "$group" &>/dev/null; then
         echo "Checking '$group' group..."
         for user in $(getent group "$group" | cut -d: -f4 | sed 's/,/ /g'); do
-            # The following line is the modification.
-            # It checks that the user is NOT 'team', 'root', or the current user.
-            if [[ "$user" != "team" && "$user" != "root" && "$user" != "$(whoami)" ]]; then
+            # This check now correctly preserves the 'team' user, 'root', and the user who ran the script.
+            if [[ "$user" != "team" && "$user" != "root" && "$user" != "$SUDO_USER" ]]; then
                 echo "Removing user '$user' from group '$group'."
                 gpasswd -d "$user" "$group"
             fi
@@ -92,13 +91,8 @@ echo "Deleting found media files..."
 find / -type f \( -iname "*.mp3" -o -iname "*.mp4" \) -delete 2>/dev/null
 
 # Remove specific hacking/cracking tools
-# Note: wirecrack is not a standard package name. This will remove a common
-# wireless cracking tool that may be present.
 echo "Removing hacking tools..."
-sudo apt-get remove --purge -y ophcrack aircrack-ng
-sudo apt-get remove --purge -y wireshark
-sudo apt purge wireshark 
-
+sudo apt-get remove --purge -y ophcrack aircrack-ng wireshark wireshark-*
 
 # Remove common pre-installed games and unnecessary graphical tools
 echo "Removing pre-installed games..."
