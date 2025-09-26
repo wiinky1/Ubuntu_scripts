@@ -1,11 +1,5 @@
 #!/bin/bash
 
-# Check for root privileges
-if [[ $EUID -ne 0 ]]; then
-   echo "ERROR: This script must be run as root."
-   exit 1
-fi
-
 echo "--- Starting CyberPatriot Hardening Script ---"
 
 
@@ -30,13 +24,13 @@ services=(
     vsftpd.service
 )
 
-for service in "${services[@]}"; do
-    if systemctl is-active --quiet "$service"; then
-        echo "Disabling and stopping active service: $service"
-        systemctl stop "$service"
-        systemctl disable "$service"
-    fi
-done
+#for service in "${services[@]}"; do
+#    if systemctl is-active --quiet "$service"; then
+#        echo "Disabling and stopping active service: $service"
+#        systemctl stop "$service"
+#        systemctl disable "$service"
+#    fi
+# done
 
 # Enable and configure UFW (Uncomplicated Firewall)
 echo "Configuring firewall with UFW..."
@@ -59,8 +53,9 @@ find / -type f \( -iname "*.mp3" -o -iname "*.mp4" \) -delete 2>/dev/null
 # Remove specific hacking/cracking tools
 echo "Removing hacking tools..."
 
-sudo apt purge ophcrack
-sudo apt purge wireshark
+sudo apt-get purge ophcrack   
+sudo apt-get remove --auto-remove ophcrack   
+sudo apt-get remove --purge wireshark
 
 # Remove common pre-installed games and unnecessary graphical tools
 echo "Removing pre-installed games..."
