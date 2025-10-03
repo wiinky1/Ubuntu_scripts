@@ -4,14 +4,14 @@ echo "--- Starting CyberPatriot Hardening Script ---"
 
 
 # --- File Permissions and System Hardening ---
-#echo "--> Fixing file permissions..."
-#echo "Searching for world-writable files and directories..."
-#find / -type f -perm -o+w -exec chmod o-w {} \; 2>/dev/null
-#find / -type d -perm -o+w -exec chmod o-w {} \; 2>/dev/null
+echo "--> Fixing file permissions..."
+echo "Searching for world-writable files and directories..."
+find / -type f -perm -o+w -exec chmod o-w {} \; 2>/dev/null
+find / -type d -perm -o+w -exec chmod o-w {} \; 2>/dev/null
 
-echo "Securing critical system files..."
-chmod 640 /etc/passwd /etc/group /etc/shadow
-chmod 600 /etc/sudoers /etc/gshadow
+#echo "Securing critical system files..."
+#chmod 640 /etc/passwd /etc/group /etc/shadow
+#chmod 600 /etc/sudoers /etc/gshadow
 
 # --- Service and Network Hardening ---
 echo "--> Hardening network and services..."
