@@ -4,10 +4,10 @@ echo "--- Starting CyberPatriot Hardening Script ---"
 
 
 # --- File Permissions and System Hardening ---
-echo "--> Fixing file permissions..."
-echo "Searching for world-writable files and directories..."
-find / -type f -perm -o+w -exec chmod o-w {} \; 2>/dev/null
-find / -type d -perm -o+w -exec chmod o-w {} \; 2>/dev/null
+#echo "--> Fixing file permissions..."
+#echo "Searching for world-writable files and directories..."
+#find / -type f -perm -o+w -exec chmod o-w {} \; 2>/dev/null
+#find / -type d -perm -o+w -exec chmod o-w {} \; 2>/dev/null
 
 echo "Securing critical system files..."
 chmod 640 /etc/passwd /etc/group /etc/shadow
@@ -24,13 +24,13 @@ services=(
     vsftpd.service
 )
 
-#for service in "${services[@]}"; do
-#    if systemctl is-active --quiet "$service"; then
-#        echo "Disabling and stopping active service: $service"
-#        systemctl stop "$service"
-#        systemctl disable "$service"
-#    fi
-# done
+for service in "${services[@]}"; do
+    if systemctl is-active --quiet "$service"; then
+        echo "Disabling and stopping active service: $service"
+        systemctl stop "$service"
+        systemctl disable "$service"
+    fi
+ done
 
 # Enable and configure UFW (Uncomplicated Firewall)
 echo "Configuring firewall with UFW..."
